@@ -9,7 +9,7 @@ if "lang" not in st.session_state:
         st.warning("Please choose a language / נא לבחור שפה")
         st.stop()
     st.session_state.lang = lang_choice
-    st.experimental_rerun()
+    st.rerun()
 
 lang = st.session_state.lang
 
