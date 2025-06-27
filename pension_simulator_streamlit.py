@@ -52,7 +52,7 @@ TEXT = {
         "years_until_ret": "כמה שנים עד לפרישה:",
         "years_contributing": "כמה מהשנים האלו תפריש בפועל:",
         "current_balance": "כמה יש לך כרגע בקרן (ש\"ח):",
-        "salary": "שכר חודשי ברוטו בעת עבודה (ש\"ח):",
+        "salary": "הערכת שכר חודשי ברוטו בממוצע (ש\"ח):",
         "run": "חשב פנסיה",
         "results_title": "📊 סכום פנסיה כולל צפוי (לאחר דמי ניהול):",
         "monthly_check": "הצג הערכת קצבה (המרה) חודשית",
