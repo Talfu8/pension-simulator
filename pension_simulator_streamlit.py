@@ -4,7 +4,8 @@ st.set_page_config(page_title="S&P 500 Pension Simulator", layout="centered")
 
 # Step 1: Choose language
 if "lang" not in st.session_state:
-    st.session_state.lang = st.radio("Choose language / בחר שפה", ["English", "עברית"])
+    st.session_state.lang = st.radio("בחר שפה / Choose language", ["עברית", "English"])
+    st.stop()  # עצור את שאר הריצה עד שנבחרה שפה
 
 lang = st.session_state.lang
 
