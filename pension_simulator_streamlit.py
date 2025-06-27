@@ -87,4 +87,45 @@ return_scenarios = {
     "Minimum Scenario (3%)": 0.03
 }
 
-def simulate(years, contribute_years, delay, balance, salar_
+def simulate(years, contribute_years, delay, balance, salary, rate):
+    for year in range(years):
+        if year >= delay:
+            annual_contrib = salary * 12 * monthly_contribution_rate
+        else:
+            annual_contrib = 0
+        balance = balance * (1 + rate - management_fee) + annual_contrib
+    return balance
+
+if "results" not in st.session_state:
+    st.session_state.results = None
+
+if st.button(txt["run"]):
+    results = {}
+    for label, r in return_scenarios.items():
+        results[label] = round(simulate(
+            years_until_retirement,
+            years_contributing,
+            years_until_start,
+            initial_balance,
+            expected_salary,
+            r
+        ), 2)
+    st.session_state.results = results
+
+if st.session_state.results:
+    st.subheader(txt["results_title"])
+    for label, amount in st.session_state.results.items():
+        st.write(f"{label}: {amount:,.2f} NIS")
+
+    if st.checkbox(txt["monthly_check"]):
+        use_custom = st.checkbox(txt["custom_annuity"])
+        if use_custom:
+            annuity_factor = st.number_input("Enter annuity factor / הזן מקדם קצבה", min_value=1.0, value=205.0)
+        else:
+            gender = st.radio(txt["gender_prompt"], [txt["male"], txt["female"]])
+            annuity_factor = 205 if gender == txt["male"] else 215
+
+        st.subheader(txt["monthly_title"].format(annuity_factor=annuity_factor))
+        for label, total in st.session_state.results.items():
+            monthly = round(total / annuity_factor, 2)
+            st.write(f"{label}: {monthly:,.2f} NIS לחודש")
