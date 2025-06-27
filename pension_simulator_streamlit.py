@@ -62,3 +62,4 @@ if st.button("Run Simulation"):
         for label, total in results.items():
             monthly = round(total / annuity_factor, 2)
             st.write(f"{label}: {monthly} NIS/month")
+
