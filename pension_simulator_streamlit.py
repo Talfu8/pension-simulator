@@ -139,4 +139,4 @@ if st.session_state.results:
         st.subheader(txt["monthly_title"].format(annuity_factor=annuity_factor))
         for label, total in st.session_state.results.items():
             monthly = round(total / annuity_factor, 2)
-            st.write(f"{label}: {monthly:,.2f} NIS לחודש")
+            st.write(f"{label}: {monthly:,.2f} NIS")
