@@ -49,7 +49,9 @@ if st.button("Run Simulation"):
         st.write(f"{label}: {amount} NIS")
 
     # Monthly pension estimate
-    if st.checkbox("Show estimated monthly pension"):
+    show_monthly = st.checkbox("Show estimated monthly pension")
+
+    if show_monthly:
         use_custom_factor = st.checkbox("I want to enter a custom annuity factor")
 
         if use_custom_factor:
@@ -62,4 +64,3 @@ if st.button("Run Simulation"):
         for label, total in results.items():
             monthly = round(total / annuity_factor, 2)
             st.write(f"{label}: {monthly} NIS/month")
-
