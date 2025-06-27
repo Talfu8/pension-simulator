@@ -54,8 +54,8 @@ TEXT = {
         "salary": "שכר חודשי ברוטו בעת עבודה (ש\"ח):",
         "run": "חשב פנסיה",
         "results_title": "📊 סכום פנסיה כולל צפוי (לאחר דמי ניהול):",
-        "monthly_check": "הצג הערכת קצבה חודשית",
-        "custom_annuity": "אני רוצה להזין מקדם קצבה בעצמי",
+        "monthly_check": "הצג הערכת קצבה (המרה) חודשית",
+        "custom_annuity": "אני רוצה להזין מקדם קצבה (המרה) בעצמי",
         "gender_prompt": "מה המגדר שלך (לצורך מקדם):",
         "monthly_title": "💰 קצבת פנסיה חודשית מוערכת (מקדם = {annuity_factor}):",
         "male": "זכר",
@@ -79,13 +79,22 @@ expected_salary = st.number_input(txt["salary"], min_value=0.0, value=18000.0)
 management_fee = 0.007
 monthly_contribution_rate = 0.18
 
-return_scenarios = {
-    "Very Optimistic (10%)": 0.10,
-    "Optimistic (7%)": 0.07,
-    "Realistic (6%)": 0.06,
-    "Conservative (4%)": 0.04,
-    "Minimum Scenario (3%)": 0.03
-}
+if lang == "עברית":
+    return_scenarios = {
+        "תרחיש אופטימי מאוד (10%)": 0.10,
+        "תרחיש אופטימי (7%)": 0.07,
+        "תרחיש ריאלי (6%)": 0.06,
+        "תרחיש שמרני (4%)": 0.04,
+        "תרחיש מינימלי (3%)": 0.03
+    }
+else:
+    return_scenarios = {
+        "Very Optimistic (10%)": 0.10,
+        "Optimistic (7%)": 0.07,
+        "Realistic (6%)": 0.06,
+        "Conservative (4%)": 0.04,
+        "Minimum Scenario (3%)": 0.03
+    }
 
 def simulate(years, contribute_years, delay, balance, salary, rate):
     for year in range(years):
