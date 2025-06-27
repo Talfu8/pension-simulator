@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(page_title="S&P 500 Pension Simulator", layout="centered")
 
-# Select language once
+# שפה: רק אם טרם נבחרה
 if "lang" not in st.session_state:
     lang_choice = st.radio("בחר שפה / Choose language", options=["", "עברית", "English"], index=0)
     if lang_choice == "":
@@ -13,7 +13,7 @@ if "lang" not in st.session_state:
 
 lang = st.session_state.lang
 
-# Add RTL if Hebrew
+# יישור לימין אם עברית
 if lang == "עברית":
     st.markdown(
         """
@@ -27,7 +27,7 @@ if lang == "עברית":
         unsafe_allow_html=True
     )
 
-# Translations
+# תרגומים
 TEXT = {
     "English": {
         "title": "📈 S&P 500 Pension Simulator",
@@ -65,20 +65,7 @@ TEXT = {
 
 txt = TEXT[lang]
 
-# UI
-st.title(txt["title"])
-st.write(txt["intro"])
-
-years_until_retirement = st.number_input(txt["years_until_ret"], min_value=1, max_value=70, value=41)
-years_contributing = st.number_input(txt["years_contributing"], min_value=0, max_value=70, value=39)
-years_until_start = years_until_retirement - years_contributing
-
-initial_balance = st.number_input(txt["current_balance"], min_value=0.0, value=27500.0)
-expected_salary = st.number_input(txt["salary"], min_value=0.0, value=18000.0)
-
-management_fee = 0.007
-monthly_contribution_rate = 0.18
-
+# 🔄 הגדרת תרחישי תשואה בשלב מוקדם
 if lang == "עברית":
     return_scenarios = {
         "תרחיש אופטימי מאוד (10%)": 0.10,
@@ -96,6 +83,21 @@ else:
         "Minimum Scenario (3%)": 0.03
     }
 
+# UI
+st.title(txt["title"])
+st.write(txt["intro"])
+
+years_until_retirement = st.number_input(txt["years_until_ret"], min_value=1, max_value=70, value=41)
+years_contributing = st.number_input(txt["years_contributing"], min_value=0, max_value=70, value=39)
+years_until_start = years_until_retirement - years_contributing
+
+initial_balance = st.number_input(txt["current_balance"], min_value=0.0, value=27500.0)
+expected_salary = st.number_input(txt["salary"], min_value=0.0, value=18000.0)
+
+management_fee = 0.007
+monthly_contribution_rate = 0.18
+
+# סימולציה
 def simulate(years, contribute_years, delay, balance, salary, rate):
     for year in range(years):
         if year >= delay:
@@ -105,6 +107,7 @@ def simulate(years, contribute_years, delay, balance, salary, rate):
         balance = balance * (1 + rate - management_fee) + annual_contrib
     return balance
 
+# תוצאה ראשונית
 if "results" not in st.session_state:
     st.session_state.results = None
 
@@ -121,6 +124,7 @@ if st.button(txt["run"]):
         ), 2)
     st.session_state.results = results
 
+# תוצאות
 if st.session_state.results:
     st.subheader(txt["results_title"])
     for label, amount in st.session_state.results.items():
