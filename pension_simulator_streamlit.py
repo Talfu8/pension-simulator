@@ -2,14 +2,32 @@ import streamlit as st
 
 st.set_page_config(page_title="S&P 500 Pension Simulator", layout="centered")
 
-# Step 1: Choose language
+# Select language once
 if "lang" not in st.session_state:
-    st.session_state.lang = st.radio("בחר שפה / Choose language", ["עברית", "English"])
-    st.stop()  # עצור את שאר הריצה עד שנבחרה שפה
+    lang_choice = st.radio("בחר שפה / Choose language", options=["", "עברית", "English"], index=0)
+    if lang_choice == "":
+        st.warning("Please choose a language / נא לבחור שפה")
+        st.stop()
+    st.session_state.lang = lang_choice
+    st.experimental_rerun()
 
 lang = st.session_state.lang
 
-# Step 2: Define translations
+# Add RTL if Hebrew
+if lang == "עברית":
+    st.markdown(
+        """
+        <style>
+        body, .stApp {
+            direction: rtl;
+            text-align: right;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Translations
 TEXT = {
     "English": {
         "title": "📈 S&P 500 Pension Simulator",
@@ -47,11 +65,10 @@ TEXT = {
 
 txt = TEXT[lang]
 
-# Title
+# UI
 st.title(txt["title"])
 st.write(txt["intro"])
 
-# Inputs
 years_until_retirement = st.number_input(txt["years_until_ret"], min_value=1, max_value=70, value=41)
 years_contributing = st.number_input(txt["years_contributing"], min_value=0, max_value=70, value=39)
 years_until_start = years_until_retirement - years_contributing
@@ -59,7 +76,6 @@ years_until_start = years_until_retirement - years_contributing
 initial_balance = st.number_input(txt["current_balance"], min_value=0.0, value=27500.0)
 expected_salary = st.number_input(txt["salary"], min_value=0.0, value=18000.0)
 
-# Constants
 management_fee = 0.007
 monthly_contribution_rate = 0.18
 
@@ -71,45 +87,4 @@ return_scenarios = {
     "Minimum Scenario (3%)": 0.03
 }
 
-def simulate(years, contribute_years, delay, balance, salary, rate):
-    for year in range(years):
-        if year >= delay:
-            annual_contrib = salary * 12 * monthly_contribution_rate
-        else:
-            annual_contrib = 0
-        balance = balance * (1 + rate - management_fee) + annual_contrib
-    return balance
-
-if "results" not in st.session_state:
-    st.session_state.results = None
-
-if st.button(txt["run"]):
-    results = {}
-    for label, r in return_scenarios.items():
-        results[label] = round(simulate(
-            years_until_retirement,
-            years_contributing,
-            years_until_start,
-            initial_balance,
-            expected_salary,
-            r
-        ), 2)
-    st.session_state.results = results
-
-if st.session_state.results:
-    st.subheader(txt["results_title"])
-    for label, amount in st.session_state.results.items():
-        st.write(f"{label}: {amount:,.2f} NIS")
-
-    if st.checkbox(txt["monthly_check"]):
-        use_custom = st.checkbox(txt["custom_annuity"])
-        if use_custom:
-            annuity_factor = st.number_input("Enter annuity factor / הזן מקדם קצבה", min_value=1.0, value=205.0)
-        else:
-            gender = st.radio(txt["gender_prompt"], [txt["male"], txt["female"]])
-            annuity_factor = 205 if gender == txt["male"] else 215
-
-        st.subheader(txt["monthly_title"].format(annuity_factor=annuity_factor))
-        for label, total in st.session_state.results.items():
-            monthly = round(total / annuity_factor, 2)
-            st.write(f"{label}: {monthly:,.2f} NIS/month")
+def simulate(years, contribute_years, delay, balance, salar_
